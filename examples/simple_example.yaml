@@ -1,0 +1,34 @@
+---
+Diagram:
+  DefinitionFiles:
+    - Type: LocalFile
+      LocalFile: ../imgs/dark_imgs.yaml
+  Resources:
+    # Top-Level Canvas
+    Canvas:
+      Type: AWS::Diagram::Canvas
+      Children: [AWSCloud]
+      FillColor: rgba(0, 0, 0, 255)
+
+    # AWS Cloud Container
+    AWSCloud:
+      Type: AWS::Diagram::Cloud
+      Preset: AWSCloudNoLogo
+      Children: [VPC]
+
+    # VPC Container
+    VPC:
+      Type: AWS::EC2::VPC
+      Title: Main VPC
+      Children: [PublicSubnet]
+
+    # Subnet Container
+    PublicSubnet:
+      Type: AWS::EC2::Subnet
+      Title: Public Subnet
+      Children: [AppServer]
+
+    # EC2 Instance Resource
+    AppServer:
+      Type: AWS::EC2::Instance
+      Title: Web Server

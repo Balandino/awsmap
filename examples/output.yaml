@@ -1,0 +1,30 @@
+---
+Diagram:
+  Resources:
+    AWSCloud:
+      Type: AWS::Diagram::Cloud
+      Preset: AWSCloudNoLogo
+      Children: [VPC]
+    Canvas:
+      Type: AWS::Diagram::Canvas
+      Children: [AWSCloud]
+      FillColor: rgba(0, 0, 0, 255)
+    PublicSubnet:
+      Type: AWS::EC2::Subnet
+      Children: [Server1, Server2]
+    Server1:
+      Type: AWS::EC2::Instance
+      Title: |-
+        Name: App Server
+         IP:10.0.0.40
+        Type: Private
+    Server2:
+      Type: AWS::EC2::Instance
+      Title: 'AppServer Name: Title'
+    VPC:
+      Type: AWS::EC2::VPC
+      Direction: vertical
+      Children: [PublicSubnet]
+  DefinitionFiles:
+    - Type: LocalFile
+      LocalFile: dark_imgs.yaml

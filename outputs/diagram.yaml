@@ -1,0 +1,47 @@
+---
+Diagram:
+  DefinitionFiles:
+    - Type: LocalFile
+      LocalFile: ../imgs/dark_imgs.yaml
+  Resources:
+    AWSCloud:
+      Type: AWS::Diagram::Cloud
+      Preset: AWSCloudNoLogo
+      Children: [VPC1, VPC2]
+    Canvas:
+      Type: AWS::Diagram::Canvas
+      Children: [AWSCloud]
+      FillColor: rgba(0, 0, 0, 255)
+    PublicSubnet:
+      Type: AWS::EC2::Subnet
+      Title: Public Subnet
+      Children: [WebServer]
+    PublicSubnet2:
+      Type: AWS::EC2::Subnet
+      Title: Public Subnet
+      Children: [WebServer2]
+    VPC1:
+      Type: AWS::EC2::VPC
+      Title: VPC 1
+      Children: [PublicSubnet]
+    VPC2:
+      Type: AWS::EC2::VPC
+      Title: VPC 2
+      Children: [PublicSubnet2]
+    WebServer:
+      Type: AWS::EC2::Instance
+      Title: Web Server
+    WebServer2:
+      Type: AWS::EC2::Instance
+      Title: Web Server 2
+  Links:
+    - Source: WebServer
+      SourcePosition: E
+      Target: WebServer2
+      TargetPosition: W
+      LineColor: rgba(255, 255, 255, 255)
+      Labels:
+        SourceLeft:
+          Title: HTTP:80
+        TargetRight:
+          Title: HTTP:80

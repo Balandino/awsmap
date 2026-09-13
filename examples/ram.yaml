@@ -1,0 +1,58 @@
+---
+Diagram:
+  DefinitionFiles:
+    - Type: URL
+      Url: https://raw.githubusercontent.com/awslabs/diagram-as-code/main/definitions/definition-for-aws-icons-light.yaml
+  Resources:
+    Canvas:
+      Type: AWS::Diagram::Canvas
+      Direction: horizontal
+      Children: [OwnerAccount, ParticipantAccount]
+
+    # --- OWNER ACCOUNT (Central Networking) ---
+    OwnerAccount:
+      Type: AWS::Diagram::Account
+      Title: 'Account A: Subnet Owner'
+      Children: [VPC1, RAMShare]
+    VPC1:
+      Type: AWS::EC2::VPC
+      Title: Central Shared VPC
+      Children: [SharedSubnet]
+    SharedSubnet:
+      Type: AWS::EC2::Subnet
+      Title: Shared Subnet (10.0.1.0/24)
+    RAMShare:
+      Type: AWS::RAM
+      Title: AWS RAM Resource Share
+
+    # --- PARTICIPANT ACCOUNT (Workload) ---
+    ParticipantAccount:
+      Type: AWS::Diagram::Account
+      Title: 'Account B: Participant'
+      Children: [WorkloadInstance]
+    WorkloadInstance:
+      Type: AWS::EC2::Instance
+      Title: Workload EC2
+  Links:
+    # 1. Share subnet out via RAM
+    - Source: SharedSubnet
+      Target: RAMShare
+      LineColor: rgba(100, 100, 100, 255)
+      Labels:
+        SourceLeft:
+          Title: Shared via RAM
+
+    # 2. Grant access to Participant Account
+    - Source: RAMShare
+      Target: ParticipantAccount
+      LineColor: rgba(100, 100, 100, 255)
+
+    # 3. Workload EC2 is physically attached to Owner's Subnet
+    - Source: WorkloadInstance
+      Target: SharedSubnet
+      LineColor: rgba(0, 164, 228, 255)
+      TargetArrowHead:
+        Type: Open
+      Labels:
+        SourceLeft:
+          Title: Elastic Network Interface (ENI)
